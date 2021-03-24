@@ -1,3 +1,5 @@
+#include <time.h>
+
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <string>
@@ -54,17 +56,27 @@ class Object {
    public:
     sf::Texture objectTexture;  // Creating object texture
     sf::Sprite objectSprite;    // Creating object sprite
+    sf::Vector2f objectPosition = objectSprite.getPosition();
+    int number;
 
-    Object(std::string pathToTexture, int wight, int height, int x, int y) {
+    void setObject(std::string pathToTexture, int wight, int height, int x, int y) {
         objectTexture.loadFromFile(pathToTexture);  // Loading object texture
         objectSprite.setTexture(objectTexture);     // Seting object texture
         objectSprite.setPosition(x, y);             // Setting object position
     }
 };
 
+int randomCactusNumber(int numberOfOptions) {
+    int return_var = rand() % numberOfOptions;
+    return return_var;
+}
+
 int main() {
     // Creating window
     sf::RenderWindow window(sf::VideoMode(WINDOWWIGHT, WINDOWHEIGHT), "Dino", sf::Style::Close);  // Mode: video, window wight = 1000, window height = 600, name = Dino, style = Close
+
+    // Run game var
+    bool runGame = true;
 
     // Creating dino
     Dino dino("Files/Img/Dino_1.png", 80, 140, WINDOWWIGHT / 6, WINDOWHEIGHT - 140 - 100);
@@ -73,12 +85,17 @@ int main() {
     WindowBackground WindowBackground("Files/Img/BackGround.png");
 
     // Ceating cactus
-    Object cactus_1("Files/Img/Cactus_1.png", 40, 88, 40, 420);
-    Object cactus_2("Files/Img/Cactus_2.png", 49, 93, 50, 415);
-    Object cactus_3("Files/Img/Cactus_3.png", 44, 104, 45, 405);
+    int numberOfCacti = 3;
+    Object cactus[numberOfCacti];
+    cactus[0].setObject("Files/Img/Cactus_1.png", 40, 88, 1000, 420);
+    cactus[1].setObject("Files/Img/Cactus_2.png", 49, 93, 1000, 415);
+    cactus[2].setObject("Files/Img/Cactus_3.png", 44, 104, 1000, 405);
 
     // Setting FPS
     window.setFramerateLimit(FPS);
+
+    // Srand
+    srand(time(NULL));
 
     // Main loop
     while (window.isOpen()) {
@@ -95,12 +112,16 @@ int main() {
             dino.jump();
         }
 
+        cactus[0].objectSprite.move(-1, 0);
+        cactus[1].objectSprite.move(-0.1, 0);
+        cactus[2].objectSprite.move(-0.4, 0);
+
         window.clear();                                  // Clearing window
         window.draw(WindowBackground.backgroundSprite);  // Drawing background
         window.draw(dino.dinoSprite);                    // Drawing dino
-        window.draw(cactus_1.objectSprite);
-        window.draw(cactus_2.objectSprite);
-        window.draw(cactus_3.objectSprite);
+        window.draw(cactus[0].objectSprite);
+        window.draw(cactus[1].objectSprite);
+        window.draw(cactus[2].objectSprite);
         window.display();
     }
 
