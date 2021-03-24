@@ -14,9 +14,9 @@ Arch Linux
 ```sh
 pacman -S sfml
 ```
-Fedora/OpenSUSE/RedHat
+Fedora/RedHat
 ```sh
-If you are using the rpm distribution, you are not welcome here 
+If you use Fedora or RedHat, you are not welcome here 
 ```
 ### Build
 On Linux:
