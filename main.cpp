@@ -1,7 +1,6 @@
 #include <ctime>
 
 #include <SFML/Graphics.hpp>
-#include <iostream>
 #include <string>
 
 const int WINDOWWIGHT = 1000;  // Window wight
@@ -17,13 +16,15 @@ public:
     // Jump
     bool make_jump_flag = false;  // Flag make jump
 private:
-    int jump_counter = 30;  // Jump counter
+    float jump_counter = 30;  // Jump counter
 
 public:
-    Dino(std::string pathToTexture, int wight, int height, int x, int y) {
+    Dino(const std::string &pathToTexture, int wight, int height, float x, float y) {
         dinoTexture.loadFromFile(pathToTexture);  // Loading dino texture
-        dinoSprite.setTexture(dinoTexture);       // Seting dino texture
-        dinoSprite.setPosition(x, y);             // Seting dino position
+        dinoSprite.setTexture(dinoTexture);       // Setting dino texture
+        dinoSprite.setPosition(x, y);             // Setting dino position
+        dinoWight = wight;
+        dinoHeight = height;
     }
 
 public:
@@ -42,12 +43,12 @@ public:
 // Background
 class WindowBackground {
 public:
-    sf::Texture backgoundTexture;  // Creating object texture
+    sf::Texture backgroundTexture;  // Creating object texture
     sf::Sprite backgroundSprite;   // Creating background sprite
 
-    WindowBackground(std::string pathToTexture) {
-        backgoundTexture.loadFromFile(pathToTexture);   // Loading object texture
-        backgroundSprite.setTexture(backgoundTexture);  // Seting object texture
+    explicit WindowBackground(const std::string &pathToTexture) {
+        backgroundTexture.loadFromFile(pathToTexture);   // Loading object texture
+        backgroundSprite.setTexture(backgroundTexture);  // Setting object texture
         backgroundSprite.setPosition(0, 0);             // Setting background position
     }
 };
@@ -57,14 +58,18 @@ public:
     sf::Texture objectTexture;  // Creating object texture
     sf::Sprite objectSprite;    // Creating object sprite
     sf::Vector2f objectPosition = objectSprite.getPosition();
+    int objectWight, objectHeight;
 
-    void setObject(std::string pathToTexture, int wight, int height, int x, int y) {
+    void setObject(const std::string &pathToTexture, int wight, int height, float x, float y) {
         objectTexture.loadFromFile(pathToTexture);  // Loading object texture
-        objectSprite.setTexture(objectTexture);     // Seting object texture
+        objectSprite.setTexture(objectTexture);     // Setting object texture
         objectSprite.setPosition(x, y);             // Setting object position
+        objectWight = wight;
+        objectHeight = height;
+
     }
 
-    void setPosition(int x, int y) {
+    void setPosition(float x, float y) {
         objectSprite.setPosition(x, y);
     }
 };
@@ -78,27 +83,24 @@ int main() {
     // Creating window
     sf::RenderWindow window(sf::VideoMode(WINDOWWIGHT, WINDOWHEIGHT), "Dino", sf::Style::Close);  // Mode: video, window wight = 1000, window height = 600, name = Dino, style = Close
 
-    // Run game var
-    bool runGame = true;
-
     // Creating dino
-    Dino dino("Files/Img/Dino_1.png", 80, 140, WINDOWWIGHT / 6, WINDOWHEIGHT - 140 - 100);
+    Dino dino("../Files/Img/Dino_1.png", 80, 140, WINDOWWIGHT / 6, WINDOWHEIGHT - 140 - 100);
 
     // Creating background window
-    WindowBackground WindowBackground("Files/Img/BackGround.png");
+    WindowBackground WindowBackground("../Files/Img/BackGround.png");
 
-    // Ceating cactus
+    // Creating cactus
     int numberOfCacti = 3;
     Object cactus[numberOfCacti];
-    cactus[0].setObject("Files/Img/Cactus_1.png", 40, 88, 1000, 420);
-    cactus[1].setObject("Files/Img/Cactus_2.png", 49, 93, 1000, 415);
-    cactus[2].setObject("Files/Img/Cactus_3.png", 44, 104, 1000, 405);
+    cactus[0].setObject("../Files/Img/Cactus_1.png", 40, 88, 1000, 420);
+    cactus[1].setObject("../Files/Img/Cactus_2.png", 49, 93, 1000, 415);
+    cactus[2].setObject("../Files/Img/Cactus_3.png", 44, 104, 1000, 405);
 
     // Setting FPS
     window.setFramerateLimit(FPS);
 
     // Srand
-    srand(time(NULL));
+    srand(time(nullptr));
 
     // Main loop
     while (window.isOpen()) {

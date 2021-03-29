@@ -18,12 +18,12 @@ Fedora/RedHat
 ```sh
 If you use Fedora or RedHat, you are not welcome here 
 ```
-### Build
+### Build and run
 ```sh
-cd pathToDinoCPP/bin
+cd pathToDinoCPP/cmake
 cmake ..
 make
-cd ..
+cd ../bin
 ./DinoCPP
 ```
 

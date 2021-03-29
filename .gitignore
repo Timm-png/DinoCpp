@@ -1,3 +1,5 @@
 .vscode/
 DinoCPP
-bin/
+cmake/
+bin/*
+.gitignore
