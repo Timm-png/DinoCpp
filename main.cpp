@@ -58,8 +58,8 @@ public:
     sf::Texture objectTexture;  // Creating object texture
     sf::Sprite objectSprite;    // Creating object sprite
     sf::Vector2f objectPosition = objectSprite.getPosition();
-    int objectWight, objectHeight;
-    int moveSpeed;
+    int objectWight{}, objectHeight{};
+    int moveSpeed{};
 
     void setObject(const std::string &pathToTexture, int wight, int height, float x, float y, int moveSpeed) {
         objectTexture.loadFromFile(pathToTexture);  // Loading object texture
@@ -105,9 +105,9 @@ int main() {
     srand(time(nullptr));
 
     const int numberNextCactusSize = 10;
-    int numberNextCactus[numberNextCactusSize] = {0};
-    for (int i = 0; i < numberNextCactusSize; i++) {
-        numberNextCactus[i] = randomCactusNumber(3);
+    int numberNextCactus[numberNextCactusSize];
+    for (int &numberNextCactusLink : numberNextCactus) {
+        numberNextCactusLink = randomCactusNumber(3);
     }
 
     // Main loop
@@ -128,7 +128,7 @@ int main() {
         window.draw(WindowBackground.backgroundSprite);  // Drawing background
         window.draw(dino.dinoSprite);                    // Drawing dino
         cactus[numberNextCactus[0]].move(cactus[numberNextCactus[0]].objectPosition.x - cactus[numberNextCactus[0]].moveSpeed, 0);
-        window.draw(cactus[0].objectSprite);
+        window.draw(cactus[numberNextCactus[0]].objectSprite);
         window.display();
     }
     return 0;

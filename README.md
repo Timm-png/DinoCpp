@@ -23,4 +23,4 @@ Linux:
 ```shell
 ./BuildAndRun.sh
 ```
-##### version: -0.0.6alpha
+##### version: -0.0.6alpha (game is not ready)
