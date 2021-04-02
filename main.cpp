@@ -147,7 +147,6 @@ int main() {
         window.draw(dino.dinoSprite);                    // Drawing dino
         cactus[0].objectSprite.setPosition(cactus[0].objectSprite.getPosition().x - cactus[0].moveSpeed,
                                            cactus[1].objectSprite.getPosition().y); // Moving first cactus
-        std::cout << cactus[0].objectSprite.getPosition().x - cactus[1].objectSprite.getPosition().x << std::endl;
         window.draw(cactus[0].objectSprite);  // Drawing first cactus
 
 
@@ -161,6 +160,9 @@ int main() {
             // Drawing next cactus
         }
         window.draw(cactus[1].objectSprite);
+
+
+
 
 
         window.display();

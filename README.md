@@ -23,4 +23,4 @@ Linux:
 ```shell
 ./BuildAndRun.sh
 ```
-##### version: -0.0.5alpha (game in development)
+##### version: -0.0.4alpha (game in development)
