@@ -22,14 +22,14 @@ If you use Fedora or RedHat, you are not welcome here
 ##### Linux:
 Build and run:
 ```shell
-./scripts/BuildAndRun.sh
+./Scripts/BuildAndRun.sh
 ```
 Build:
 ```shell
-./scripts/Build.sh
+./Scripts/Build.sh
 ```
 Run:
 ```shell
-./scripts/Run.sh
+./Scripts/Run.sh
 ```
 ##### version: -0.0.4alpha (game in development)
