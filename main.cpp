@@ -81,7 +81,6 @@ int randomCactusIndex(int numberOfOptions) {
 }
 
 int randomDistanceBetweenObject(int minDistance, int maxDistance) {
-    return 100;
     int difference = maxDistance - minDistance;
     int result = rand() % difference + minDistance;
     return result;
