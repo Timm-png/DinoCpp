@@ -8,176 +8,223 @@ const int WINDOWHEIGHT = 600;  // Window height
 const int FPS = 60;            // FPS
 
 class Dino {
-   public:
-    sf::Texture dinoTexture;    // Creating dino texture
-    sf::Sprite dinoSprite;      // Creating dino sprite
-    int dinoWight, dinoHeight;  // Dino wight and height
+public:
+	sf::Texture dinoTexture;    // Creating dino texture
+	sf::Sprite dinoSprite;      // Creating dino sprite
+	int dinoWidht, dinoHeight;  // Dino wight and height
 
-    // Jump
-    bool make_jump_flag = false;  // Flag make jump
-   private:
-    float jump_counter = 30;  // Jump counter
+	Dino(const std::string &pathToTexture, int wight, int height, float x, float y) {
+		dinoTexture.loadFromFile(pathToTexture);  // Loading dino texture
+		dinoSprite.setTexture(dinoTexture);       // Setting dino texture
+		dinoSprite.setPosition(x, y);             // Setting dino position
+		dinoWidht = wight;
+		dinoHeight = height;
+	}
 
-   public:
-    Dino(const std::string &pathToTexture, int wight, int height, float x,
-         float y) {
-        dinoTexture.loadFromFile(pathToTexture);  // Loading dino texture
-        dinoSprite.setTexture(dinoTexture);       // Setting dino texture
-        dinoSprite.setPosition(x, y);             // Setting dino position
-        dinoWight = wight;
-        dinoHeight = height;
-    }
-
-   public:
-    // Jump
-    void jump() {
-        if (jump_counter >= -30) {
-            dinoSprite.move(0, -(jump_counter / 3));
-            jump_counter -= 1;
-        } else {
-            jump_counter = 30;
-            make_jump_flag = false;
-        }
-    }
+	// Jump
+	bool make_jump_flag = false;  // Flag make jump
+	float jump_counter = 30;      // Jump counter
+	void jump() {
+		if (jump_counter >= -30) {
+			dinoSprite.move(0, -(jump_counter / 3));
+			jump_counter -= 1;
+		} else {
+			jump_counter = 30;
+			make_jump_flag = false;
+		}
+	}
 };
 
 // Background
 class WindowBackground {
-   public:
-    sf::Texture backgroundTexture;  // Creating object texture
-    sf::Sprite backgroundSprite;    // Creating background sprite explicit
-    WindowBackground(const std::string &pathToTexture) {
-        backgroundTexture.loadFromFile(pathToTexture);   // Loading object texture
-        backgroundSprite.setTexture(backgroundTexture);  // Setting object texture
-        backgroundSprite.setPosition(0, 0);              // Setting background position
-    }
+public:
+	sf::Texture backgroundTexture;  // Creating object texture
+	sf::Sprite backgroundSprite;    // Creating background sprite explicit
+	WindowBackground(const std::string &pathToTexture) {
+		backgroundTexture.loadFromFile(pathToTexture);   // Loading object texture
+		backgroundSprite.setTexture(backgroundTexture);  // Setting object texture
+		backgroundSprite.setPosition(0, 0);              // Setting background position
+	}
 };
 
 class Object {
-   public:
-    sf::Texture objectTexture;  // Creating object texture
-    sf::Sprite objectSprite;    // Creating object sprite
-    int objectWight, objectHeight;
-    int objectMoveSpeed{};
+public:
+	sf::Texture objectTexture;  // Creating object texture
+	sf::Sprite objectSprite;    // Creating object sprite
+	int objectWight, objectHeight;
+	int objectMoveSpeed{};
 
-    void setObject(const std::string &pathToTexture, int wight, int height,
-                   float x, float y, int moveSpeed) {
-        objectTexture.loadFromFile(pathToTexture);  // Loading object texture
-        objectSprite.setTexture(objectTexture);     // Setting object texture
-        objectSprite.setPosition(x, y);             // Setting object position
-        objectWight = wight;
-        objectHeight = height;
-        objectMoveSpeed = moveSpeed;
-    }
+	void setObject(const std::string &pathToTexture, int wight, int height, float x, float y, int moveSpeed) {
+		objectTexture.loadFromFile(pathToTexture);  // Loading object texture
+		objectSprite.setTexture(objectTexture);     // Setting object texture
+		objectSprite.setPosition(x, y);             // Setting object position
+		objectWight = wight;
+		objectHeight = height;
+		objectMoveSpeed = moveSpeed;
+	}
 
-    void move(float x, float y) { objectSprite.move(x, y); }
+	void move(float x, float y) {
+		objectSprite.move(x, y);
+	}
 };
 
 int randomCactusIndex(int numberOfOptions) {
-    int result = rand() % 3;
-    return result;
+	int result = rand() % 3;
+	return result;
 }
 
 int randomDistanceBetweenObject(int minDistance, int maxDistance) {
-    int difference = maxDistance - minDistance;
-    int result = rand() % difference + minDistance;
-    return result;
+	int difference = maxDistance - minDistance;
+	int result = rand() % difference + minDistance;
+	return result;
+}
+
+int randomDistanceBetweenCactus(std::vector<Object> cactuses, int i) {
+	int counter = randomCactusIndex(7);
+	if (counter == 0) {
+		if (i > 1
+			and cactuses[i - 1].objectSprite.getPosition().x - cactuses[i - 2].objectSprite.getPosition().x > 100) {
+			return 50;
+		} else {
+			return randomDistanceBetweenObject(350, 700);
+		}
+	} else {
+		return randomDistanceBetweenObject(350, 700);
+	}
 }
 
 void creatingCactusArray(std::vector<Object> &array, int fromWhichIndex, int toWhatIndex) {
-    for (int i = fromWhichIndex; i <= toWhatIndex; i++) {
-        if (i == 0) {
-            int randomCactus = randomCactusIndex(3);
-            if (randomCactus == 0) {
-                array[i].setObject("../Files/Img/Cactus_1.png", 40, 88, 1000, 420, 3);
-            } else if (randomCactus == 1) {
-                array[i].setObject("../Files/Img/Cactus_2.png", 49, 93, 1000, 415, 3);
-            } else if (randomCactus == 2) {
-                array[i].setObject("../Files/Img/Cactus_3.png", 44, 104, 1000, 405, 3);
-            }
-        } else {
-            int randomCactus = randomCactusIndex(3);
-            if (randomCactus == 0) {
-                array[i].setObject("../Files/Img/Cactus_1.png", 40, 88, array[i - 1].objectSprite.getPosition().x + randomDistanceBetweenObject(350, 700), 420, 3);
-            } else if (randomCactus == 1) {
-                array[i].setObject("../Files/Img/Cactus_2.png", 49, 93, array[i - 1].objectSprite.getPosition().x + randomDistanceBetweenObject(350, 700), 415, 3);
-            } else if (randomCactus == 2) {
-                array[i].setObject("../Files/Img/Cactus_3.png", 44, 104, array[i - 1].objectSprite.getPosition().x + randomDistanceBetweenObject(350, 700), 405, 3);
-            }
-        }
-    }
+	for (int i = fromWhichIndex; i <= toWhatIndex; i++) {
+		if (i == 0) {
+			int randomCactus = randomCactusIndex(3);
+			if (randomCactus == 0) {
+				array[i].setObject("../Files/Img/Cactus_1.png", 40, 88, 1000, 420, 4);
+			} else if (randomCactus == 1) {
+				array[i].setObject("../Files/Img/Cactus_2.png", 49, 93, 1000, 415, 4);
+			} else if (randomCactus == 2) {
+				array[i].setObject("../Files/Img/Cactus_3.png", 44, 104, 1000, 405, 4);
+			}
+		} else {
+			int randomCactus = randomCactusIndex(3);
+			int newX = array[i - 1].objectSprite.getPosition().x + randomDistanceBetweenCactus(array, i);
+			if (randomCactus == 0) {
+
+				array[i].setObject("../Files/Img/Cactus_1.png", 40, 88, newX, 420, 4);
+			} else if (randomCactus == 1) {
+				array[i].setObject("../Files/Img/Cactus_2.png", 49, 93, newX, 415, 4);
+			} else if (randomCactus == 2) {
+				array[i].setObject("../Files/Img/Cactus_3.png", 44, 104, newX, 405, 4);
+			}
+		}
+	}
 }
 
-Object newCactus(int xPastCactuses) {
-    Object result;
-    int randomCactus = randomCactusIndex(3);
-    if (randomCactus == 0) {
-        result.setObject("../Files/Img/Cactus_1.png", 40, 88, xPastCactuses + randomDistanceBetweenObject(350, 700), 420, 3);
-    } else if (randomCactus == 1) {
-        result.setObject("../Files/Img/Cactus_2.png", 49, 93, xPastCactuses + randomDistanceBetweenObject(350, 700), 415, 3);
-    } else if (randomCactus == 2) {
-        result.setObject("../Files/Img/Cactus_3.png", 44, 104, xPastCactuses + randomDistanceBetweenObject(350, 700), 405, 3);
-    }
-    return result;
+// Moving and generating new catuses
+void movingAndGeneratingNewCactuses(std::vector<Object> &cactuses) {
+	for (int i = 0; i < 10; i++) {
+		cactuses[i].objectSprite.setPosition(cactuses[i].objectSprite.getPosition().x - cactuses[i].objectMoveSpeed,
+		                                     cactuses[i].objectSprite.getPosition().y);
+		if (cactuses[i].objectSprite.getPosition().x < 0 - cactuses[i].objectWight) {
+			int cactusWithMaxX = 0;
+			for (int i = 0; i < 10; i++) {
+				if (cactuses[i].objectSprite.getPosition().x > cactuses[cactusWithMaxX].objectSprite.getPosition().x) {
+					cactusWithMaxX = i;
+				}
+			}
+			cactuses[i].objectSprite.setPosition(
+				cactuses[cactusWithMaxX].objectSprite.getPosition().x + randomDistanceBetweenCactus(cactuses, i),
+				cactuses[i].objectSprite.getPosition().y);
+		}
+	}
+}
+
+bool checkingCactusAndDinoCollision(std::vector<Object> &cactuses, Dino &dino) {
+	for (int i = 0; i <= cactuses.size(); i++) {
+		if (!dino.make_jump_flag) {
+			if (cactuses[i].objectSprite.getPosition().x < dino.dinoSprite.getPosition().x + dino.dinoWidht - 10
+				and dino.dinoSprite.getPosition().x + dino.dinoWidht - 10
+					< cactuses[i].objectSprite.getPosition().x + cactuses[i].objectWight) {
+				return true;
+			}
+		} else if (dino.make_jump_flag) {
+			if (dino.jump_counter >= 0) {
+				if (dino.dinoSprite.getPosition().y + dino.dinoHeight - 35
+					>= cactuses[i].objectSprite.getPosition().y) {
+					if (cactuses[i].objectSprite.getPosition().x
+						<= dino.dinoSprite.getPosition().x + dino.dinoWidht - 40
+						and dino.dinoSprite.getPosition().x + dino.dinoWidht - 40
+							<= cactuses[i].objectSprite.getPosition().x + cactuses[i].objectWight) {
+						return true;
+					}
+				}
+			} else if (dino.jump_counter <= -1) {
+				if (dino.dinoSprite.getPosition().y + dino.dinoHeight - 35
+					>= cactuses[i].objectSprite.getPosition().y) {
+					if (cactuses[i].objectSprite.getPosition().x
+						<= dino.dinoSprite.getPosition().x +20
+						and dino.dinoSprite.getPosition().x + 20
+							<= cactuses[i].objectSprite.getPosition().x + cactuses[i].objectWight) {
+						return true;
+					}
+				}
+			}
+		}
+	}
+	return false;
 }
 
 int main() {
-    // Creating window
-    sf::RenderWindow window(
-        sf::VideoMode(WINDOWWIGHT, WINDOWHEIGHT), "Dino",
-        sf::Style::Close);  // Mode: video, window wight = 1000, window height =
-    // 600, name = Dino, style = Close
+	// Creating window
+	sf::RenderWindow window(
+		sf::VideoMode(WINDOWWIGHT, WINDOWHEIGHT), "Dino",
+		sf::Style::Close);  // Mode: video, window wight = 1000, window height =
+	// 600, name = Dino, style = Close
 
-    // Creating dino
-    Dino dino("../Files/Img/Dino_1.png", 80, 140, WINDOWWIGHT / 6, WINDOWHEIGHT - 140 - 100);
+	// Creating dino
+	Dino dino("../Files/Img/Dino_1.png", 80, 140, WINDOWWIGHT / 6, WINDOWHEIGHT - 140 - 100);
 
-    // Creating background window
-    WindowBackground WindowBackground("../Files/Img/BackGround.png");
+	// Creating background window
+	WindowBackground WindowBackground("../Files/Img/BackGround.png");
 
-    // Setting FPS
-    window.setFramerateLimit(FPS);
+	// Setting FPS
+	window.setFramerateLimit(FPS);
 
-    srand(time(nullptr));
+	srand(time(nullptr));
 
-    //Array with textures of cactuses
-    std::vector<Object> arrayWithCactuses(10);
-    creatingCactusArray(arrayWithCactuses, 0, 9);
+	//Array with textures of cactuses
+	std::vector<Object> arrayWithCactuses(10);
+	creatingCactusArray(arrayWithCactuses, 0, 9);
 
-    // Main loop
-    while (window.isOpen()) {
-        sf::Event event;
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed) {
-                window.close();
-            } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-                dino.make_jump_flag = true;  // Jump
-            }
-        }
-        // Jump
-        if (dino.make_jump_flag) {
-            dino.jump();
-        }
+	// Main loop
+	while (window.isOpen()) {
+		sf::Event event;
+		while (window.pollEvent(event)) {
+			if (event.type == sf::Event::Closed) {
+				window.close();
+			} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+				dino.make_jump_flag = true;  // Jump
+			}
+		}
+		// Jump
+		if (dino.make_jump_flag) {
+			dino.jump();
+		}
 
-        window.clear();                                  // Clearing window
-        window.draw(WindowBackground.backgroundSprite);  // Drawing background
-        window.draw(dino.dinoSprite);                    // Drawing dino
+		window.clear();                                  // Clearing window
+		window.draw(WindowBackground.backgroundSprite);  // Drawing background
+		window.draw(dino.dinoSprite);                    // Drawing dino
 
-        // Moving, drawing and generating catuses
-        for (int i = 0; i < 10; i++) {
-            arrayWithCactuses[i].objectSprite.setPosition(arrayWithCactuses[i].objectSprite.getPosition().x - arrayWithCactuses[i].objectMoveSpeed, arrayWithCactuses[i].objectSprite.getPosition().y);
-            window.draw(arrayWithCactuses[i].objectSprite);
-            if (arrayWithCactuses[i].objectSprite.getPosition().x < 0 - arrayWithCactuses[i].objectWight) {
-                int cactusWithMaxX = 0;
-                for (int i = 0; i < 10; i++) {
-                    if (arrayWithCactuses[i].objectSprite.getPosition().x > arrayWithCactuses[cactusWithMaxX].objectSprite.getPosition().x) {
-                        cactusWithMaxX = i;
-                    }
-                }
-                arrayWithCactuses[i].objectSprite.setPosition(arrayWithCactuses[cactusWithMaxX].objectSprite.getPosition().x + randomDistanceBetweenObject(350, 700), arrayWithCactuses[i].objectSprite.getPosition().y);
-            }
-        }
+		movingAndGeneratingNewCactuses(arrayWithCactuses);  // Moving and generating new cactuses
+		// Drawing cactuses
+		for (int i = 0; i < 10; i++) {
+			window.draw(arrayWithCactuses[i].objectSprite);
+		}
 
-        window.display();
-    }
-    return 0;
+		// Checking cactus and dino collision
+		if (checkingCactusAndDinoCollision(arrayWithCactuses, dino)) {
+			window.close();
+		}
+		window.display();
+	}
+	return 0;
 }
