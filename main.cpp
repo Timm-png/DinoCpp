@@ -8,7 +8,7 @@ const int WINDOWHEIGHT = 600;  // Window height
 const int FPS = 60;            // FPS
 
 class Dino {
-public:
+	public:
 	sf::Texture dinoTexture;    // Creating dino texture
 	sf::Sprite dinoSprite;      // Creating dino sprite
 	int dinoWidht, dinoHeight;  // Dino wight and height
@@ -23,7 +23,7 @@ public:
 
 	// Jump
 	bool make_jump_flag = false;  // Flag make jump
-	float jump_counter = 30;      // Jump counter
+	int jump_counter = 30;      // Jump counter
 	void jump() {
 		if (jump_counter >= -30) {
 			dinoSprite.move(0, -(jump_counter / 3));
@@ -33,11 +33,17 @@ public:
 			make_jump_flag = false;
 		}
 	}
+
+	void clear() {
+		dinoSprite.setPosition(0, 0);             // Setting dino position
+		dinoWidht = 0;
+		dinoHeight = 0;
+	}
 };
 
 // Background
 class WindowBackground {
-public:
+	public:
 	sf::Texture backgroundTexture;  // Creating object texture
 	sf::Sprite backgroundSprite;    // Creating background sprite explicit
 	WindowBackground(const std::string &pathToTexture) {
@@ -48,7 +54,7 @@ public:
 };
 
 class Object {
-public:
+	public:
 	sf::Texture objectTexture;  // Creating object texture
 	sf::Sprite objectSprite;    // Creating object sprite
 	int objectWight, objectHeight;
@@ -161,7 +167,7 @@ bool checkingCactusAndDinoCollision(std::vector<Object> &cactuses, Dino &dino) {
 				if (dino.dinoSprite.getPosition().y + dino.dinoHeight - 35
 					>= cactuses[i].objectSprite.getPosition().y) {
 					if (cactuses[i].objectSprite.getPosition().x
-						<= dino.dinoSprite.getPosition().x +20
+						<= dino.dinoSprite.getPosition().x + 20
 						and dino.dinoSprite.getPosition().x + 20
 							<= cactuses[i].objectSprite.getPosition().x + cactuses[i].objectWight) {
 						return true;
@@ -173,29 +179,20 @@ bool checkingCactusAndDinoCollision(std::vector<Object> &cactuses, Dino &dino) {
 	return false;
 }
 
-int main() {
-	// Creating window
-	sf::RenderWindow window(
-		sf::VideoMode(WINDOWWIGHT, WINDOWHEIGHT), "Dino",
-		sf::Style::Close);  // Mode: video, window wight = 1000, window height =
-	// 600, name = Dino, style = Close
-
+int runGame(sf::RenderWindow &window) {
 	// Creating dino
 	Dino dino("../Files/Img/Dino_1.png", 80, 140, WINDOWWIGHT / 6, WINDOWHEIGHT - 140 - 100);
 
 	// Creating background window
 	WindowBackground WindowBackground("../Files/Img/BackGround.png");
 
-	// Setting FPS
-	window.setFramerateLimit(FPS);
-
-	srand(time(nullptr));
-
 	//Array with textures of cactuses
 	std::vector<Object> arrayWithCactuses(10);
 	creatingCactusArray(arrayWithCactuses, 0, 9);
 
-	// Main loop
+	//Var to fix bug
+	int varToFixBug = 0;
+
 	while (window.isOpen()) {
 		sf::Event event;
 		while (window.pollEvent(event)) {
@@ -215,16 +212,42 @@ int main() {
 		window.draw(dino.dinoSprite);                    // Drawing dino
 
 		movingAndGeneratingNewCactuses(arrayWithCactuses);  // Moving and generating new cactuses
+
 		// Drawing cactuses
 		for (int i = 0; i < 10; i++) {
 			window.draw(arrayWithCactuses[i].objectSprite);
 		}
 
-		// Checking cactus and dino collision
 		if (checkingCactusAndDinoCollision(arrayWithCactuses, dino)) {
-			window.close();
+			varToFixBug++;
 		}
+
+		// Checking cactus and dino collision
+		if (checkingCactusAndDinoCollision(arrayWithCactuses, dino) and varToFixBug == 0) {
+			window.close();
+		} else if (varToFixBug != 0) {
+			return 1;
+		}
+
 		window.display();
 	}
+}
+
+int main() {
+	// Creating window
+	sf::RenderWindow window(
+		sf::VideoMode(WINDOWWIGHT, WINDOWHEIGHT), "Dino",
+		sf::Style::Close);  // Mode: video, window wight = 1000, window height =
+	// 600, name = Dino, style = Close
+
+	// Setting FPS
+	window.setFramerateLimit(FPS);
+
+	srand(time(nullptr));
+
+	while(window.isOpen()){
+		runGame(window);
+	}
+
 	return 0;
 }
