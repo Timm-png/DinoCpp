@@ -6,6 +6,8 @@
 const int WINDOWWIGHT = 1000;  // Window wight
 const int WINDOWHEIGHT = 600;  // Window height
 const int FPS = 60;            // FPS
+sf::Font retroFont;
+bool runMainLoop = true;
 
 class Dino {
 	public:
@@ -127,7 +129,7 @@ void creatingCactusArray(std::vector<Object> &array, int fromWhichIndex, int toW
 
 // Moving and generating new catuses
 void movingAndGeneratingNewCactuses(std::vector<Object> &cactuses) {
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < cactuses.size(); i++) {
 		cactuses[i].objectSprite.setPosition(cactuses[i].objectSprite.getPosition().x - cactuses[i].objectMoveSpeed,
 		                                     cactuses[i].objectSprite.getPosition().y);
 		if (cactuses[i].objectSprite.getPosition().x < 0 - cactuses[i].objectWight) {
@@ -164,11 +166,20 @@ bool checkingCactusAndDinoCollision(std::vector<Object> &cactuses, Dino &dino) {
 					}
 				}
 			} else if (dino.jump_counter <= -1) {
+				if (dino.dinoSprite.getPosition().y + dino.dinoHeight - 15
+					>= cactuses[i].objectSprite.getPosition().y) {
+					if (cactuses[i].objectSprite.getPosition().x
+						<= dino.dinoSprite.getPosition().x + 10
+						and dino.dinoSprite.getPosition().x + 10
+							<= cactuses[i].objectSprite.getPosition().x + cactuses[i].objectWight) {
+						return true;
+					}
+				}
 				if (dino.dinoSprite.getPosition().y + dino.dinoHeight - 35
 					>= cactuses[i].objectSprite.getPosition().y) {
 					if (cactuses[i].objectSprite.getPosition().x
-						<= dino.dinoSprite.getPosition().x + 20
-						and dino.dinoSprite.getPosition().x + 20
+						<= dino.dinoSprite.getPosition().x + dino.dinoWidht - 40
+						and dino.dinoSprite.getPosition().x + dino.dinoWidht - 40
 							<= cactuses[i].objectSprite.getPosition().x + cactuses[i].objectWight) {
 						return true;
 					}
@@ -179,6 +190,49 @@ bool checkingCactusAndDinoCollision(std::vector<Object> &cactuses, Dino &dino) {
 	return false;
 }
 
+int randomNumber(int fromNumber, int toNumber) {
+	int difference = toNumber - fromNumber;
+	return rand() % difference + fromNumber;
+}
+
+//int gameOver(sf::RenderWindow &window) {
+//	sf::Event event;
+//	while (window.pollEvent(event)) {
+//if (event.type == sf::Event::Closed) {
+//window.close();
+//return 0;
+//}
+//		if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Escape)) {
+//			return 1;
+//		} else if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Return)) {
+//			return 0;
+//		}
+//	}
+//}
+
+int pause(sf::RenderWindow &window) {
+	sf::Text pauseText("Pause, press ESC, for continue", retroFont, 50); // Creating pauses text
+	pauseText.setPosition(295, 275); // Setting position of pauses text
+	pauseText.setStyle(sf::Text::Regular); // Setting style of pauses text
+	sf::Color black(0, 0, 0); // Creating black color
+	pauseText.setColor(black); // Setting color of pauses text
+
+	while (1) {
+		sf::Event event;
+		while (window.pollEvent(event)) {
+			if (event.type == sf::Event::Closed) {
+				window.close();
+				return 0;
+			}
+			if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Escape)) {
+				return 0;
+			}
+		}
+		window.draw(pauseText);
+		window.display();
+	}
+}
+
 int runGame(sf::RenderWindow &window) {
 	// Creating dino
 	Dino dino("../Files/Img/Dino_1.png", 80, 140, WINDOWWIGHT / 6, WINDOWHEIGHT - 140 - 100);
@@ -187,21 +241,26 @@ int runGame(sf::RenderWindow &window) {
 	WindowBackground WindowBackground("../Files/Img/BackGround.png");
 
 	//Array with textures of cactuses
-	std::vector<Object> arrayWithCactuses(10);
+	int numberOfCactuses = randomNumber(10, 20);
+	std::vector<Object> arrayWithCactuses(numberOfCactuses);
 	creatingCactusArray(arrayWithCactuses, 0, 9);
 
-	//Var to fix bug
-	int varToFixBug = 0;
+	int varForFixBug = 0;
 
 	while (window.isOpen()) {
 		sf::Event event;
 		while (window.pollEvent(event)) {
 			if (event.type == sf::Event::Closed) {
 				window.close();
-			} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+			}
+			if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Escape)) {
+				pause(window);
+			}
+			if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Space)) {
 				dino.make_jump_flag = true;  // Jump
 			}
 		}
+
 		// Jump
 		if (dino.make_jump_flag) {
 			dino.jump();
@@ -214,21 +273,23 @@ int runGame(sf::RenderWindow &window) {
 		movingAndGeneratingNewCactuses(arrayWithCactuses);  // Moving and generating new cactuses
 
 		// Drawing cactuses
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < numberOfCactuses; i++) {
 			window.draw(arrayWithCactuses[i].objectSprite);
 		}
 
-		if (checkingCactusAndDinoCollision(arrayWithCactuses, dino)) {
-			varToFixBug++;
-		}
-
 		// Checking cactus and dino collision
-		if (checkingCactusAndDinoCollision(arrayWithCactuses, dino) and varToFixBug == 0) {
-			window.close();
-		} else if (varToFixBug != 0) {
+		varForFixBug++;
+		if (checkingCactusAndDinoCollision(arrayWithCactuses, dino)) {
 			return 1;
-		}
 
+//			else {
+//				if (gameOver(window) == 0) {
+//					return 1;
+//				} else {
+//					window.close();
+//				}
+//			}
+		}
 		window.display();
 	}
 }
@@ -240,12 +301,14 @@ int main() {
 		sf::Style::Close);  // Mode: video, window wight = 1000, window height =
 	// 600, name = Dino, style = Close
 
+	retroFont.loadFromFile("../Files/Other/8930.ttf"); // Load font
+
 	// Setting FPS
 	window.setFramerateLimit(FPS);
 
 	srand(time(nullptr));
 
-	while(window.isOpen()){
+	while (window.isOpen()) {
 		runGame(window);
 	}
 
