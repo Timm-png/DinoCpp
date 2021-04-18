@@ -32,6 +32,6 @@ Run:
 ```shell
 ./Scripts/Run.sh
 ```
-##### version: -0.0.1alpha (game in development)
+##### version: 0.1beta (game in development)
 
 ###### And, I don't know why this working.

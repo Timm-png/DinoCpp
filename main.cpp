@@ -268,6 +268,13 @@ int runGame() {
 
 	int varForFixBug = 0;
 
+	// Text Esc - pause
+	sf::Text escPause("Esc - pause", retroFont, 30);
+	escPause.setPosition(10, 5); 
+	escPause.setStyle(sf::Text::Regular); 
+	sf::Color black(0, 0, 0);
+	escPause.setColor(black);
+
 	while (window.isOpen()) {
 		sf::Event event;
 		while (window.pollEvent(event)) {
@@ -311,6 +318,7 @@ int runGame() {
 				}
 			}
 		}
+		window.draw(escPause);
 		window.display();
 	}
 }
