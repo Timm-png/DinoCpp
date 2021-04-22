@@ -19,12 +19,12 @@ Fedora/RedHat
 If you use Fedora or RedHat, you are not welcome here 
 ```
 ### Run
-##### Linux:
- Download releas linux version and run `DinoCPP`
+#### Linux:
+##### Download releas linux version and run `DinoCPP`
 
 or
 
-Compile from source code:
+##### Compile from source code:
 ```shell
 ./Scripts/BuildAndRun.sh
 
@@ -33,13 +33,13 @@ Compile from source code:
 ./Scripts/Run.sh
 ```
 
-##### Windows:
+#### Windows:
 
-Download releas linux version and run `DinoCPP.exe`
+##### Download releas linux version and run `DinoCPP.exe`
 
 or
 
-Compile from source code:
+##### Compile from source code:
 
 Download [DinoWinSourceCode](https://github.com/Timm-png/DinoCPP/releases/download/0.2beta/DinoWinSourceCode.zip)
 ```shell
