@@ -37,10 +37,13 @@ Compile from source code:
 
 Download releas linux version and run `DinoCPP.exe`
 
-orA
+or
+
 Compile from source code:
+
+Download [DinoWinSourceCode](https://github.com/Timm-png/DinoCPP/releases/download/0.2beta/DinoWinSourceCode.zip)
 ```shell
-path\to\DinoCPPWin>C:\path\to\gcc\g++.exe main.cpp -I "SFML/include" -L "SFML/lib" -lsfml-graphics -lsfml-window -lsfml-system -o DinoCPP.exe
+path\to\DinoWinSourceCode>C:\path\to\gcc\g++.exe main.cpp -I "SFML/include" -L "SFML/lib" -lsfml-graphics -lsfml-window -lsfml-system -o DinoCPP.exe
 ```
 ##### version: 0.1beta (game in development)
 
