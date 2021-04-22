@@ -41,10 +41,10 @@ or
 
 ##### Compile from source code:
 
-Download [DinoWinSourceCode](https://github.com/Timm-png/DinoCPP/releases/download/0.2beta/DinoWinSourceCode.zip)
+Download [DinoWinSourceCode](https://github.com/Timm-png/DinoCPP/releases/download/v0.2beta/DinoWinSourceCode.zip)
 ```shell
 path\to\DinoWinSourceCode>C:\path\to\gcc\g++.exe main.cpp -I "SFML/include" -L "SFML/lib" -lsfml-graphics -lsfml-window -lsfml-system -o DinoCPP.exe
 ```
-##### version: 0.1beta (game in development)
+##### version: 0.2beta (game in development)
 
 ###### And, I don't know why this working.
