@@ -35,7 +35,7 @@ or
 
 #### Windows:
 
-##### Download releas [Windows](https://github.com/Timm-png/DinoCPP/releases/download/v0.2beta/DinoWin.zip) version and run `DinoCPP.exe`
+##### Download releas for [Windows](https://github.com/Timm-png/DinoCPP/releases/download/v0.2beta/DinoWin.zip) version and run `DinoCPP.exe`
 
 or
 
